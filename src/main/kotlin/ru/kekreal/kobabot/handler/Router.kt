@@ -9,6 +9,6 @@ class Router(val handler: MessageHandler) {
 
     @Bean
     fun route() = router {
-        GET("/message") { m -> handler.process(m) }
+        POST("/message") { m -> handler.process(m) }
     }
 }

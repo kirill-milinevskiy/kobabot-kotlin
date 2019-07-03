@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono
 class MessageHandler {
 
     fun process(m: ServerRequest): Mono<out ServerResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        println("hello I'm kobabot")
+        return Mono.empty()
     }
 }
