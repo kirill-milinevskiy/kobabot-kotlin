@@ -1,18 +1,29 @@
 package ru.kekreal.kobabot.handler
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 
-@Component
-class MessageHandler {
+private val log = KotlinLogging.logger {}
 
-    fun process(m: ServerRequest): Mono<out ServerResponse> {
-        println("hello I'm kobabot")
-        println(m.bodyToFlux(Update::class.java))
-        return Mono.empty()
+@Component
+class UpdateHandler(private val sender: Sender) {
+
+    fun handle(update: ServerRequest): Mono<Any> =
+        update.bodyToMono(Update::class.java)
+            .doOnNext(::println)
+            .filter {
+                it.message.text != null &&
+                    (it.message.text.contains("пивко", ignoreCase = true) ||
+                        it.message.text.contains("пивка", ignoreCase = true) ||
+                        it.message.text.contains("пивку", ignoreCase = true))
+            }
+            .flatMap(sender::sendBeer)
+
+    fun process(update: Update): Update {
+        return update.also(::println)
     }
 }
 
@@ -30,9 +41,11 @@ data class Message(
     @JsonProperty("date")
     val date: Long,
     @JsonProperty("chat")
-    val chat: TelegramChat,
+    val chat: Chat,
     @JsonProperty("text")
-    val text: String?
+    val text: String?,
+    @JsonProperty("sticker")
+    val sticker: Sticker?
 )
 
 data class TelegramUser(
@@ -46,8 +59,7 @@ data class TelegramUser(
     val username: String?
 )
 
-data class TelegramChat(
-
+data class Chat(
     @JsonProperty("id")
     val id: Long,
     /**
@@ -63,4 +75,11 @@ data class TelegramChat(
     val firstName: String?,
     @JsonProperty("last_name")
     val lastName: String?
+)
+
+data class Sticker(
+    @JsonProperty("file_id")
+    val id: String,
+    @JsonProperty("emoji")
+    val emoji: String?
 )

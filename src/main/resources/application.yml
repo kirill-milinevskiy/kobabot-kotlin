@@ -5,3 +5,7 @@ spring:
   application:
     name: kobabot
 
+logging:
+  level:
+    reactor.netty.http.client: DEBUG
+
