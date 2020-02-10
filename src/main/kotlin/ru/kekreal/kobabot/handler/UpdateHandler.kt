@@ -13,9 +13,7 @@ class UpdateHandler(private val sender: Sender) {
             .doOnNext(::println)
             .filter {
                 it.message.text != null &&
-                    (it.message.text.contains("пивко", ignoreCase = true) ||
-                        it.message.text.contains("пивка", ignoreCase = true) ||
-                        it.message.text.contains("пивку", ignoreCase = true))
+                    it.message.text.contains(Regex(".*[Пп][ИиЕе]([ВвГг]|[Фф]+)[Кк]*([ОоАаУу])"))
             }
             .flatMap(sender::sendBeer)
 
