@@ -1,15 +1,10 @@
 package ru.kekreal.kobabot.handler
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import mu.KotlinLogging
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
-import java.lang.System.getenv
-
-private val log = KotlinLogging.logger {}
 
 @Component
 class Sender {
@@ -32,14 +27,15 @@ class Sender {
                 println("..................................done..................................")
             }
             .flatMap { it.bodyToMono(Any::class.java) }
+            .doOnNext(::println)
     }
 }
 
 data class SendStickerRequest(
     @JsonProperty("chat_id")
-    private val chatId: Long,
-    @JsonProperty("file_id")
-    private val stickerId: String,
+    val chatId: Long,
+    @JsonProperty("sticker")
+    val stickerId: String,
     @JsonProperty("reply_to_message_id")
-    private val replyToMessageId: Long? = null
+    val replyToMessageId: Long? = null
 )

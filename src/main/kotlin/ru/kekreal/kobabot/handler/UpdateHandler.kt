@@ -1,12 +1,9 @@
 package ru.kekreal.kobabot.handler
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import reactor.core.publisher.Mono
-
-private val log = KotlinLogging.logger {}
 
 @Component
 class UpdateHandler(private val sender: Sender) {
